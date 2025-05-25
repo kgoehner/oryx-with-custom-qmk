@@ -20,14 +20,14 @@ enum custom_keycodes {
 
 
 
-#define DUAL_FUNC_0 LT(24, KC_0)
+#define DUAL_FUNC_0 LT(19, KC_7)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_voyager(
-    KC_GRAVE,       ST_MACRO_0,     KC_MAC_PASTE,   LCTL(KC_A),     KC_MAC_COPY,    KC_MAC_CUT,                                     KC_HOME,        KC_LEFT,        KC_RIGHT,       KC_END,         LGUI(KC_TAB),   KC_MINUS,       
-    KC_TAB,         KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,                                           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSLS,        
-    KC_BSPC,        LT(1, KC_A),    MT(MOD_LALT, KC_S),MT(MOD_LSFT, KC_D),LT(2, KC_F),    KC_G,                                           KC_H,           LT(3, KC_J),    MT(MOD_RSFT, KC_K),MT(MOD_RALT, KC_L),LT(1, KC_SCLN), KC_QUOTE,       
-    CW_TOGG,        MT(MOD_LGUI, KC_Z),KC_X,           KC_C,           MT(MOD_LCTL, KC_V),KC_B,                                           KC_N,           MT(MOD_RCTL, KC_M),KC_COMMA,       LT(4, KC_DOT),  MT(MOD_RGUI, KC_SLASH),KC_ENTER,       
+    KC_GRAVE,       ST_MACRO_0,     KC_MAC_PASTE,   LCTL(KC_A),     KC_MAC_COPY,    KC_MAC_CUT,                                     KC_HOME,        KC_LEFT,        KC_RIGHT,       KC_END,         LGUI(KC_TAB),   KC_BSLS,        
+    KC_TAB,         KC_B,           KC_L,           KC_D,           KC_W,           KC_Z,                                           KC_QUOTE,       KC_F,           KC_O,           KC_U,           KC_J,           KC_SCLN,        
+    KC_BSPC,        LT(1, KC_N),    MT(MOD_LALT, KC_R),MT(MOD_LSFT, KC_T),LT(2, KC_S),    KC_G,                                           KC_Y,           LT(3, KC_H),    MT(MOD_RSFT, KC_A),MT(MOD_RALT, KC_E),LT(1, KC_I),    KC_COMMA,       
+    CW_TOGG,        MT(MOD_LGUI, KC_Q),KC_X,           KC_M,           MT(MOD_LCTL, KC_C),KC_V,                                           KC_K,           MT(MOD_RCTL, KC_P),KC_DOT,         LT(4, KC_MINUS),MT(MOD_RGUI, KC_SLASH),KC_ENTER,       
                                                     DUAL_FUNC_0,    KC_SPACE,                                       KC_TRANSPARENT, KC_ESCAPE
   ),
   [1] = LAYOUT_voyager(
@@ -60,15 +60,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
-const uint16_t PROGMEM combo0[] = { MT(MOD_LSFT, KC_D), MT(MOD_RSFT, KC_K), COMBO_END};
-const uint16_t PROGMEM combo1[] = { MT(MOD_LGUI, KC_Z), KC_W, COMBO_END};
-const uint16_t PROGMEM combo2[] = { KC_T, MT(MOD_LGUI, KC_Z), COMBO_END};
-
-combo_t key_combos[COMBO_COUNT] = {
-    COMBO(combo0, KC_TRANSPARENT),
-    COMBO(combo1, LGUI(KC_W)),
-    COMBO(combo2, LGUI(KC_T)),
-};
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
