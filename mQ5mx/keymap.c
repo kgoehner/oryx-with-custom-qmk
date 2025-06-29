@@ -20,7 +20,7 @@ enum custom_keycodes {
 
 
 
-#define DUAL_FUNC_0 LT(3, KC_F12)
+#define DUAL_FUNC_0 LT(15, KC_F8)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_voyager(
@@ -33,7 +33,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [1] = LAYOUT_voyager(
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 LCTL(KC_PGDN),  KC_PGDN,        KC_PAGE_UP,     LCTL(KC_PAGE_UP),KC_TRANSPARENT, KC_AUDIO_MUTE,  
     ST_MACRO_1,     KC_GRAVE,       KC_LABK,        KC_RABK,        KC_TRANSPARENT, KC_PIPE,                                        KC_CIRC,        KC_LBRC,        KC_RBRC,        KC_DLR,         ST_MACRO_2,     ST_MACRO_3,     
-    KC_TRANSPARENT, KC_EXLM,        KC_MINUS,       KC_PLUS,        KC_EQUAL,       KC_AMPR,                                        KC_HASH,        KC_LPRN,        KC_RPRN,        KC_COLN,        KC_TRANSPARENT, KC_TRANSPARENT, 
+    KC_TRANSPARENT, KC_EXLM,        KC_MINUS,       KC_PLUS,        KC_EQUAL,       KC_AMPR,                                        KC_HASH,        KC_LPRN,        KC_RPRN,        KC_COLN,        KC_COLN,        KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_TILD,        KC_SLASH,       KC_ASTR,        KC_BSLS,        KC_PERC,                                        KC_AT,          KC_LCBR,        KC_RCBR,        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
                                                     KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT
   ),
