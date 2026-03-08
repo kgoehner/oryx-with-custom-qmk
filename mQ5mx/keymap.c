@@ -22,14 +22,14 @@ enum custom_keycodes {
 
 
 
-#define DUAL_FUNC_0 LT(9, KC_P)
+#define DUAL_FUNC_0 LT(8, KC_F19)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_voyager(
     KC_GRAVE,       ST_MACRO_0,     KC_MAC_PASTE,   LCTL(KC_A),     KC_MAC_COPY,    KC_MAC_CUT,                                     KC_HOME,        KC_LEFT,        KC_RIGHT,       KC_END,         LGUI(KC_TAB),   KC_BSLS,        
-    KC_TAB,         KC_B,           KC_L,           KC_D,           KC_W,           KC_Z,                                           KC_QUOTE,       KC_F,           KC_O,           KC_U,           KC_J,           KC_SCLN,        
-    KC_BSPC,        LT(1, KC_N),    MT(MOD_LALT, KC_R),MT(MOD_LSFT, KC_T),LT(2, KC_S),    KC_G,                                           KC_Y,           LT(3, KC_H),    MT(MOD_RSFT, KC_A),MT(MOD_RALT, KC_E),LT(1, KC_I),    KC_SLASH,       
-    CW_TOGG,        MT(MOD_LGUI, KC_Q),KC_X,           KC_M,           MT(MOD_LCTL, KC_C),KC_V,                                           KC_K,           MT(MOD_RCTL, KC_P),KC_DOT,         LT(4, KC_MINUS),MT(MOD_RGUI, KC_COMMA),KC_ENTER,       
+    KC_TAB,         KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,                                           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_SCLN,        
+    KC_BSPC,        LT(1, KC_A),    MT(MOD_LALT, KC_S),MT(MOD_LSFT, KC_D),LT(2, KC_F),    KC_G,                                           KC_H,           LT(3, KC_J),    MT(MOD_RSFT, KC_K),MT(MOD_RALT, KC_L),LT(1, KC_SCLN), KC_SLASH,       
+    CW_TOGG,        MT(MOD_LGUI, KC_Z),KC_X,           KC_C,           MT(MOD_LCTL, KC_V),KC_B,                                           KC_N,           MT(MOD_RCTL, KC_M),KC_DOT,         LT(4, KC_MINUS),MT(MOD_RGUI, KC_COMMA),KC_ENTER,       
                                                     DUAL_FUNC_0,    KC_SPACE,                                       KC_TRANSPARENT, KC_ESCAPE
   ),
   [1] = LAYOUT_voyager(
@@ -80,7 +80,14 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+
 extern rgb_config_t rgb_matrix_config;
+
+RGB hsv_to_rgb_with_value(HSV hsv) {
+  RGB rgb = hsv_to_rgb( hsv );
+  float f = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
+  return (RGB){ f * rgb.r, f * rgb.g, f * rgb.b };
+}
 
 void keyboard_post_init_user(void) {
   rgb_matrix_enable();
@@ -105,9 +112,8 @@ void set_layer_color(int layer) {
     if (!hsv.h && !hsv.s && !hsv.v) {
         rgb_matrix_set_color( i, 0, 0, 0 );
     } else {
-        RGB rgb = hsv_to_rgb( hsv );
-        float f = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
-        rgb_matrix_set_color( i, f * rgb.r, f * rgb.g, f * rgb.b );
+        RGB rgb = hsv_to_rgb_with_value(hsv);
+        rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
     }
   }
 }
@@ -116,28 +122,52 @@ bool rgb_matrix_indicators_user(void) {
   if (rawhid_state.rgb_control) {
       return false;
   }
-  if (keyboard_config.disable_layer_led) { return false; }
-  switch (biton32(layer_state)) {
-    case 1:
-      set_layer_color(1);
-      break;
-    case 3:
-      set_layer_color(3);
-      break;
-    case 4:
-      set_layer_color(4);
-      break;
-   default:
-    if (rgb_matrix_get_flags() == LED_FLAG_NONE)
+  if (!keyboard_config.disable_layer_led) { 
+    switch (biton32(layer_state)) {
+      case 1:
+        set_layer_color(1);
+        break;
+      case 3:
+        set_layer_color(3);
+        break;
+      case 4:
+        set_layer_color(4);
+        break;
+     default:
+        if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
+          rgb_matrix_set_color_all(0, 0, 0);
+        }
+    }
+  } else {
+    if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
       rgb_matrix_set_color_all(0, 0, 0);
-    break;
+    }
   }
+
   return true;
 }
 
 
+
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+  case QK_MODS ... QK_MODS_MAX:
+    // Mouse and consumer keys (volume, media) with modifiers work inconsistently across operating systems,
+    // this makes sure that modifiers are always applied to the key that was pressed.
+    if (IS_CONSUMER_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode))) {
+      if (record->event.pressed) {
+        add_mods(QK_MODS_GET_MODS(keycode));
+        send_keyboard_report();
+        wait_ms(2);
+        register_code(QK_MODS_GET_BASIC_KEYCODE(keycode));
+        return false;
+      } else {
+        wait_ms(2);
+        del_mods(QK_MODS_GET_MODS(keycode));
+      }
+    }
+    break;
     case ST_MACRO_0:
     if (record->event.pressed) {
       SEND_STRING(SS_LGUI(SS_TAP(X_LEFT))SS_DELAY(100)  SS_LGUI(SS_LSFT(SS_TAP(X_RIGHT))));
@@ -182,7 +212,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
           layer_on(4);
         } else {
+          if (!is_layer_locked(4)) {
           layer_off(4);
+          }
         }  
       }  
       return false;
@@ -212,5 +244,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
-
-

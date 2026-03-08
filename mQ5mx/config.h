@@ -3,7 +3,7 @@
 #define PERMISSIVE_HOLD
 
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define SERIAL_NUMBER "mQ5mx/40oGx3"
+#define SERIAL_NUMBER "mQ5mx/x9d5D5"
 #define LAYER_STATE_8BIT
 #define HCS(report) host_consumer_send(record->event.pressed ? report : 0); return false
 
