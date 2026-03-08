@@ -9,3 +9,4 @@ REPEAT_KEY_ENABLE = yes
 LAYER_LOCK_ENABLE = yes
 
 # Custom QMK here
+KEY_OVERRIDE_ENABLE = yes

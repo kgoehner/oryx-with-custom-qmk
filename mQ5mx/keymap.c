@@ -151,18 +151,6 @@ bool rgb_matrix_indicators_user(void) {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  // Shift+Backspace = Delete
-  if (keycode == KC_BSPC) {
-    if (record->event.pressed && (get_mods() & MOD_MASK_SHIFT)) {
-      del_mods(MOD_MASK_SHIFT);
-      register_code(KC_DEL);
-      add_mods(MOD_MASK_SHIFT);
-      return false;
-    } else if (!record->event.pressed) {
-      unregister_code(KC_DEL);
-    }
-  }
-  
   switch (keycode) {
   case QK_MODS ... QK_MODS_MAX:
     // Mouse and consumer keys (volume, media) with modifiers work inconsistently across operating systems,
@@ -259,4 +247,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 // Custom QMK here
-// Shift+Backspace = Delete implemented in process_record_user above
+const key_override_t delete_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
+
+const key_override_t *key_overrides[] = {
+  &delete_key_override
+};
