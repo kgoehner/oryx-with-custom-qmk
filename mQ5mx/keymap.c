@@ -200,6 +200,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     break;
     case MAC_LOCK:
       HCS(0x19E);
+      break;
 
     case DUAL_FUNC_0:
       if (record->tap.count > 0) {
